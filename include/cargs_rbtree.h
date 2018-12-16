@@ -20,6 +20,9 @@ struct cargs_rbroot {
     struct cargs_rbnode *root;
 };
 
+#define rb_entry(ptr, type, member) \
+    ((type *) ((void *) ptr - (void *) (&((type *) 0)->member - 0)))
+
 /**
  * create rbtree
  * @return rbnode root
