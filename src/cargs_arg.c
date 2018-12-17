@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-__$inner_flag($__arg_flag$);
+__$inner_arg_flag($__arg_flag$);
 
 static struct __cargs_arg *__args_start = NULL;
 static struct __cargs_arg *__args_end   = NULL;
-static struct cargs_rbroot *__args_set = NULL;
+static struct cargs_rbroot *__args_set  = NULL;
 
 static void __init_start()
 {
@@ -34,6 +34,7 @@ static void __init_end()
     }
     __args_end++;
 }
+
 
 inline static int
 __rbcmp(const char * const a, struct cargs_rbnode * const node)
@@ -154,7 +155,6 @@ void cargs_args_init()
 {
     __init_start();
     __init_end();
-
     __init_set();
 }
 
@@ -183,3 +183,80 @@ struct cargs_llnode *cargs_args_find(const char * const title)
 
     return NULL;
 }
+
+static int __init_special_arg(struct __cargs_arg * const arg,
+                              int sub_argc,
+                              char **sub_argv)
+{
+    int i;
+
+    if (arg->params_count_cache == -1) {
+        for (arg->params_count_cache = 0;
+             arg->args_type[arg->params_count_cache] != arg_type_null
+             && arg->params_count_cache < CARGS_ARG_TYPE_MAX;
+             arg->params_count_cache++);
+    }
+
+    if (arg->prerequisite != NULL && arg->prerequisite->enable == false) {
+        return -1;
+    }
+
+    if (arg->params_count_cache > sub_argc - 1) {
+        return -1;
+    }
+
+    for (i = 0; i < arg->params_count_cache; i++) {
+        if (!cargs_find_arg_type_examiner(arg->args_type[i])(sub_argv[i + 1])) {
+            return -1;
+        }
+    }
+    for (i = 0; i < arg->params_count_cache; i++) {
+        arg->params[i] = sub_argv[i + 1];
+    }
+    arg->enable = true;
+
+    return arg->params_count_cache + 1;
+}
+
+/**
+ * transfer command line args
+ * @param argc: argc
+ * @param argv: argv
+ * 
+ */
+bool cargs_transfer(int argc, char **argv)
+{
+    int p;
+    const char *title;
+    struct cargs_llnode *finded_title;
+    struct cargs_llnode *subtitle;
+    struct __cargs_arg *arg;
+    int param_count;
+    bool finded_args;
+
+    for (p = 1; p < argc;) {
+        title = argv[p];
+         finded_title = cargs_args_find(title);
+         if (finded_title == NULL) {
+             return false;
+         }
+
+         finded_args = false;
+         for (subtitle = finded_title->next;
+              subtitle != finded_title;
+              subtitle = subtitle->next) {
+             arg = ll_entry(subtitle, struct __cargs_arg_llnode, node)->arg;
+             param_count = __init_special_arg(arg, argc - p, argv + p);
+             if (param_count != -1) {
+                 p += param_count;
+                 finded_args = true;
+                 break;
+             }
+         }
+         if (!finded_args) {
+             return false;
+         }
+    }
+    return true;
+}
+

@@ -5,21 +5,21 @@
 #include <stddef.h>
 #include "cargs_rbtree.h"
 #include "cargs_linked_list.h"
+#include "cargs_arg_type.h"
 
-enum cargs_arg_type {
-    arg_type_null = 0x00,
-    arg_type_byte,
-    arg_type_short,
-    arg_type_int,
-    arg_type_string,
-};
+#define CARGS_ARG_TITLE_MAX 16
+#define CARGS_ARG_TYPE_MAX 16
+#define CARGS_ARG_PARAMS_MAX 16
 
 struct __cargs_arg {
+    char *_inner_name;
     const struct __cargs_arg *prerequisite;
-    char * titles[16];
+    char *titles[CARGS_ARG_TITLE_MAX];
     bool enable;
-    const enum cargs_arg_type args_type[16];
-    char *params[16];
+    const enum cargs_arg_type args_type[CARGS_ARG_TYPE_MAX];
+    char *params[CARGS_ARG_PARAMS_MAX];
+
+    int params_count_cache;
 
     unsigned int magic;
 };
@@ -29,15 +29,17 @@ struct __cargs_arg {
 #define CARGS_ARG_STRUCT_NAME(n) __cargs_arg_name_##n
 #define CARGS_ARG_MAGIC 0xca294a29
 
-#define __$inner_flag(n) \
+#define __$inner_arg_flag(n) \
     static struct __cargs_arg CARGS_ARG_STRUCT_NAME(n) \
         CARGS_ARG_SECTION = { \
-            .prerequisite = NULL, \
-            .titles       = { NULL }, \
-            .enable       = false, \
-            .args_type    = { arg_type_null }, \
-            .params       = { NULL }, \
-            .magic        = CARGS_ARG_MAGIC \
+            ._inner_name        = #n, \
+            .prerequisite       = NULL, \
+            .titles             = { NULL }, \
+            .enable             = false, \
+            .args_type          = { arg_type_null }, \
+            .params             = { NULL }, \
+            .params_count_cache = -1, \
+            .magic              = CARGS_ARG_MAGIC \
         }
 
 #define __SET__(...) { __VA_ARGS__ }
@@ -45,23 +47,27 @@ struct __cargs_arg {
 #define cargs_flag(n, ts) \
     static struct __cargs_arg CARGS_ARG_STRUCT_NAME(n) \
         CARGS_ARG_SECTION = { \
-            .prerequisite = NULL, \
-            .titles       = ts, \
-            .enable       = false, \
-            .args_type    = { arg_type_null }, \
-            .params       = { NULL }, \
-            .magic        = CARGS_ARG_MAGIC \
+            ._inner_name        = #n, \
+            .prerequisite       = NULL, \
+            .titles             = ts, \
+            .enable             = false, \
+            .args_type          = { arg_type_null }, \
+            .params             = { NULL }, \
+            .params_count_cache = -1, \
+            .magic              = CARGS_ARG_MAGIC \
         }
 
 #define cargs_subflag(p, n, ts) \
     static struct __cargs_arg CARGS_ARG_STRUCT_NAME(n) \
         CARGS_ARG_SECTION = { \
-            .prerequisite = &CARGS_ARG_STRUCT_NAME(n), \
-            .titles       = ts, \
-            .enable       = false, \
-            .args_type    = { }, \
-            .params       = { }, \
-            .magic        = CARGS_ARG_MAGIC \
+            ._inner_name        = #n, \
+            .prerequisite       = &CARGS_ARG_STRUCT_NAME(p), \
+            .titles             = ts, \
+            .enable             = false, \
+            .args_type          = { }, \
+            .params             = { }, \
+            .params_count_cache = -1, \
+            .magic              = CARGS_ARG_MAGIC \
         }
 
 struct __cargs_arg_rbnode {
@@ -87,5 +93,13 @@ void cargs_args_init();
  * @return: args linked list
  */
 struct cargs_llnode *cargs_args_find(const char * const title);
+
+/**
+ * transfer command line args
+ * @param argc: argc
+ * @param argv: argv
+ * 
+ */
+bool cargs_transfer(int argc, char **argv);
 
 #endif
