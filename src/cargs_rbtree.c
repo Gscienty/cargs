@@ -6,7 +6,7 @@
  * @return rbnode root
  * 
  */
-struct cargs_rbroot *rbtree_root_ctor()
+struct cargs_rbroot *cargs_rbtree_root_ctor()
 {
     struct cargs_rbroot *root =
         (struct cargs_rbroot *) malloc(sizeof(struct cargs_rbroot));
@@ -30,8 +30,9 @@ struct cargs_rbroot *rbtree_root_ctor()
  * @return: rbtree node
  * 
  */
-struct cargs_rbnode *rbtree_node_ctor(const struct cargs_rbroot * const root,
-                                      const size_t size)
+struct cargs_rbnode *
+cargs_rbtree_node_ctor(const struct cargs_rbroot * const root,
+                       const size_t size)
 {
     struct cargs_rbnode *node =
         (struct cargs_rbnode *) malloc(size);
