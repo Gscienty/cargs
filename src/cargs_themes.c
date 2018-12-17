@@ -79,7 +79,8 @@ static bool __insert_rbt(struct cargs_rbnode *node)
 static bool __insert_themes_set(const struct __cargs_theme *theme)
 {
     struct cargs_rbnode *node =
-        rbtree_node_ctor(__themes_set, sizeof(struct __cargs_theme_rbnode));
+        cargs_rbtree_node_ctor(__themes_set,
+                               sizeof(struct __cargs_theme_rbnode));
     if (node == NULL) {
         return false;
     }
@@ -93,7 +94,7 @@ static void __init_set()
 {
     struct __cargs_theme *p;
 
-    __themes_set = rbtree_root_ctor();
+    __themes_set = cargs_rbtree_root_ctor();
     if (__themes_set == NULL) {
         exit(-1);
     }
