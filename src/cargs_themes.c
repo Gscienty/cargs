@@ -5,13 +5,11 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
-
 static struct __cargs_theme *__theme_start = NULL;
 static struct __cargs_theme *__theme_end   = NULL;
 static struct cargs_rbroot *__themes_set   = NULL;
 
-cargs_process($__theme_flag$) { }
+cargs_process($__theme_flag$, __SET__()) { }
 
 static void __init_start()
 {
@@ -133,7 +131,7 @@ static int __rbcmp_str(const char * const a, struct cargs_rbnode * const b)
  * @return: process struct ptr
  * 
  */
-const struct __cargs_theme *cargs_find_process(const char * const fname)
+const void *cargs_find_process(const char * const fname)
 {
     struct cargs_rbnode *node = __themes_set->root;
     int cmpret;
@@ -141,7 +139,8 @@ const struct __cargs_theme *cargs_find_process(const char * const fname)
     while (node != &__themes_set->nil) {
         cmpret = __rbcmp_str(fname, node);
         if (cmpret == 0) {
-            return rb_entry(node, struct __cargs_theme_rbnode, node)->tptr;
+            return rb_entry(node, struct __cargs_theme_rbnode, node)
+                ->tptr->fptr;
         }
         else if (cmpret < 0) {
             node = node->left;
@@ -152,4 +151,62 @@ const struct __cargs_theme *cargs_find_process(const char * const fname)
     }
 
     return NULL;
+}
+
+static bool __satisfy(struct __cargs_theme * const p)
+{
+    int i;
+    if (!p->args[0].arg) {
+        return false;
+    }
+    
+    for (i = 0;
+         !p->args[i].arg && i < CARGS_THEME_ARGS_MAX;
+         i++) {
+        if (p->args[i].required && !p->args[i].arg->enable) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
+ * satisfy process
+ * 
+ */
+const struct __cargs_theme *cargs_satisfy_process()
+{
+    struct __cargs_theme *p;
+    
+    for (p = __theme_start; p != __theme_end; p++) {
+        if (p == &CARGS_THEME_STRUCT_NAME($__theme_flag$)) {
+            continue;
+        }
+        if (__satisfy(p)) {
+            return p;
+        }
+    }
+
+    return NULL;
+}
+
+/**
+ * process args size
+ * @return: args size
+ * 
+ */
+size_t cargs_process_args_size(const struct __cargs_theme * const process)
+{
+    size_t ret = 0;
+    int i;
+
+    for (i = 0;
+         i < CARGS_THEME_ARGS_MAX
+         && process->args[i].arg;
+         i++) {
+        ret += cargs_arg_size(process->args[i].arg);
+    }
+
+    return ret;
 }
