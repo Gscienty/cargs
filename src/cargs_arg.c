@@ -260,3 +260,29 @@ bool cargs_transfer(int argc, char **argv)
     return true;
 }
 
+/**
+ * get args size
+ * @param arg
+ * 
+ */
+size_t cargs_arg_size(const struct __cargs_arg * const arg)
+{
+    size_t ret = 0;
+    int i;
+
+    for (i = 0;
+         arg->args_type[i] != arg_type_null
+         && i < CARGS_ARG_TYPE_MAX;
+         i++) {
+        
+        struct __cargs_arg_type *type = cargs_find_arg_type(arg->args_type[i]);
+        if (type == NULL) {
+            return 0;
+        }
+
+        ret += type->value_size;
+    }
+
+    return ret;
+}
+
