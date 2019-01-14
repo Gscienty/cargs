@@ -1,7 +1,7 @@
 #include "cargs_themes.h"
 #include <stdio.h>
 
-cargs_process(test_process, int a, int b)
+cargs_process(test_process, __SET__(), int a, int b)
 {
     printf("%d\n", a + b);
 }
