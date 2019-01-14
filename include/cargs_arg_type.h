@@ -3,6 +3,7 @@
 
 #include "cargs_rbtree.h"
 #include <stdbool.h>
+#include <stddef.h>
 
 enum cargs_arg_type {
     arg_type_null = 0x00,
@@ -15,41 +16,46 @@ enum cargs_arg_type {
 };
 
 typedef bool (*arg_type_examiner) (const char * const);
+typedef void (*arg_type_transfer) (char * const, const char * const);
 
-struct __cargs_arg_type_examiner {
+struct __cargs_arg_type {
     int type_code;
-    arg_type_examiner fptr;
+    size_t value_size;
+    arg_type_examiner examiner;
+    arg_type_transfer transfer;
     unsigned int magic;    
 };
 
-#define CARGS_ARG_TYPE_EXAMINER_SECTION \
+#define CARGS_ARG_TYPE_SECTION \
     __attribute__((used, aligned(1), section(".arg_type_examiner")))
-#define CARGS_ARG_TYPE_EXAMINER_NAME(n) __cargs_arg_type_examiner_name_##n
-#define CARGS_ARG_TYPE_EXAMINER_FUNCTION_NAME(n) __cargs_arg_type_examiner_function_name_##n
-#define CARGS_ARG_TYPE_EXAMINER_MAGIC 0xa29758ee
+#define CARGS_ARG_TYPE_NAME(n) __cargs_arg_type_name_##n
+#define CARGS_ARG_TYPE_FUNCTION_NAME(n) __cargs_arg_type_function_name_##n
+#define CARGS_ARG_TYPE_MAGIC 0xa29758ee
 
-#define __$inner_arg_examiner_flag(n) \
-    static struct __cargs_arg_type_examiner CARGS_ARG_TYPE_EXAMINER_NAME(n) \
-        CARGS_ARG_TYPE_EXAMINER_SECTION = { \
-            .type_code = 0, \
-            .fptr = NULL, \
-            .magic = CARGS_ARG_TYPE_EXAMINER_MAGIC \
+#define __$inner_arg_type_flag(n) \
+    static struct __cargs_arg_type CARGS_ARG_TYPE_NAME(n) \
+        CARGS_ARG_TYPE_SECTION = { \
+            .type_code  = 0, \
+            .value_size = 0, \
+            .examiner   = NULL, \
+            .transfer   = NULL, \
+            .magic      = CARGS_ARG_TYPE_MAGIC \
         }
 
-#define cargs_arg_type(c, fn, arg) \
-    bool CARGS_ARG_TYPE_EXAMINER_FUNCTION_NAME(fn) (const char * const); \
-    static struct __cargs_arg_type_examiner CARGS_ARG_TYPE_EXAMINER_NAME(fn) \
-        CARGS_ARG_TYPE_EXAMINER_SECTION = { \
-            .type_code = c, \
-            .fptr = CARGS_ARG_TYPE_EXAMINER_FUNCTION_NAME(fn), \
-            .magic = CARGS_ARG_TYPE_EXAMINER_MAGIC \
-        }; \
-    bool CARGS_ARG_TYPE_EXAMINER_FUNCTION_NAME(fn) (const char * const arg)
+#define cargs_arg_type(c, s, e, t) \
+    static struct __cargs_arg_type CARGS_ARG_TYPE_NAME(c) \
+        CARGS_ARG_TYPE_SECTION = { \
+            .type_code  = c, \
+            .value_size = s, \
+            .examiner   = e, \
+            .transfer   = t, \
+            .magic      = CARGS_ARG_TYPE_MAGIC \
+        };
 
 
 struct __cargs_arg_type_rbt {
     struct cargs_rbnode node;
-    struct __cargs_arg_type_examiner *examiner;
+    struct __cargs_arg_type *type;
 };
 
 /**
@@ -59,11 +65,27 @@ struct __cargs_arg_type_rbt {
 void cargs_arg_type_init();
 
 /**
+ * find arg type
+ * @param type_code: type code
+ * @return type
+ * 
+ */
+struct __cargs_arg_type *cargs_find_arg_type(int type_code);
+
+/**
  * find arg type examiner
  * @param type_code: type code
  * @return: examiner
  * 
  */
 arg_type_examiner cargs_find_arg_type_examiner(int type_code);
+
+/**
+ * find arg type transfer
+ * @param type_code: type code
+ * @return transfer
+ * 
+ */
+arg_type_transfer cargs_find_arg_type_transfer(int type_code);
 
 #endif

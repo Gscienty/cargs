@@ -1,12 +1,12 @@
 #include "cargs_arg_type.h"
 #include <stdlib.h>
 
-__$inner_arg_examiner_flag($__arg_type_flag$);
-static struct __cargs_arg_type_examiner *__args_type_start = NULL;
-static struct __cargs_arg_type_examiner *__args_type_end   = NULL;
-static struct cargs_rbroot *__args_type_code               = NULL;
+__$inner_arg_type_flag($__arg_type_flag$);
+static struct __cargs_arg_type *__args_type_start = NULL;
+static struct __cargs_arg_type *__args_type_end   = NULL;
+static struct cargs_rbroot *__args_type_code      = NULL;
 
-static bool __insert_type_rbt(struct __cargs_arg_type_examiner *val)
+static bool __insert_type_rbt(struct __cargs_arg_type *val)
 {
     struct cargs_rbnode **place = &__args_type_code->root;
     struct cargs_rbnode *parent = &__args_type_code->nil;
@@ -17,7 +17,7 @@ static bool __insert_type_rbt(struct __cargs_arg_type_examiner *val)
     if (node == NULL) {
         return false;
     }
-    rb_entry(node, struct __cargs_arg_type_rbt, node)->examiner = val;
+    rb_entry(node, struct __cargs_arg_type_rbt, node)->type = val;
 
     if (__args_type_code->root == &__args_type_code->nil) {
         __args_type_code->root = node;
@@ -27,7 +27,7 @@ static bool __insert_type_rbt(struct __cargs_arg_type_examiner *val)
             parent = *place;
             cmpret = val->type_code
                 - rb_entry(parent, struct __cargs_arg_type_rbt, node)
-                ->examiner->type_code;
+                ->type->type_code;
             if (cmpret == 0) {
                 return false;
             }
@@ -47,7 +47,7 @@ static bool __insert_type_rbt(struct __cargs_arg_type_examiner *val)
 
 static void __init_arg_type_code()
 {
-    struct __cargs_arg_type_examiner *p;
+    struct __cargs_arg_type *p;
 
     __args_type_code = cargs_rbtree_root_ctor();
     if (__args_type_code == NULL) {
@@ -55,7 +55,7 @@ static void __init_arg_type_code()
     }
 
     for (p = __args_type_start; p != __args_type_end; p++) {
-        if (p == &CARGS_ARG_TYPE_EXAMINER_NAME($__arg_type_flag$)) {
+        if (p == &CARGS_ARG_TYPE_NAME($__arg_type_flag$)) {
             continue;
         }
 
@@ -67,11 +67,11 @@ static void __init_arg_type_code()
 
 static void __init_type_start()
 {
-    struct __cargs_arg_type_examiner *p;
-    __args_type_start = &CARGS_ARG_TYPE_EXAMINER_NAME($__arg_type_flag$);
+    struct __cargs_arg_type *p;
+    __args_type_start = &CARGS_ARG_TYPE_NAME($__arg_type_flag$);
     while (1) {
         p = __args_type_start - 1;    
-        if (p->magic != CARGS_ARG_TYPE_EXAMINER_MAGIC) {
+        if (p->magic != CARGS_ARG_TYPE_MAGIC) {
             break;
         }
         __args_type_start--;
@@ -80,11 +80,11 @@ static void __init_type_start()
 
 static void __init_type_end()
 {
-    struct __cargs_arg_type_examiner *p;
-    __args_type_end = &CARGS_ARG_TYPE_EXAMINER_NAME($__arg_type_flag$);
+    struct __cargs_arg_type *p;
+    __args_type_end = &CARGS_ARG_TYPE_NAME($__arg_type_flag$);
     while (1) {
         p = __args_type_end + 1;
-        if (p->magic != CARGS_ARG_TYPE_EXAMINER_MAGIC) {
+        if (p->magic != CARGS_ARG_TYPE_MAGIC) {
             break;
         }
         __args_type_end++;
@@ -110,13 +110,7 @@ static bool __default_examiner(const char * const arg)
     return false;
 }
 
-/**
- * find arg type examiner
- * @param type_code: type code
- * @return: examiner
- * 
- */
-arg_type_examiner cargs_find_arg_type_examiner(int type_code)
+static struct __cargs_arg_type *__find(int type_code)
 {
     int cmp;
     struct cargs_rbnode *node = __args_type_code->root;
@@ -124,10 +118,10 @@ arg_type_examiner cargs_find_arg_type_examiner(int type_code)
     while (node != &__args_type_code->nil) {
         cmp = type_code
             - rb_entry(node, struct __cargs_arg_type_rbt, node)
-            ->examiner->type_code;
+            ->type->type_code;
         if (cmp == 0) {
             return rb_entry(node, struct __cargs_arg_type_rbt, node)
-                ->examiner->fptr;
+                ->type;
         }
         else if (cmp < 0) {
             node = node->left;
@@ -137,5 +131,55 @@ arg_type_examiner cargs_find_arg_type_examiner(int type_code)
         }
     }
 
-    return __default_examiner;
+    return NULL;
+}
+
+/**
+ * find arg type examiner
+ * @param type_code: type code
+ * @return: examiner
+ * 
+ */
+arg_type_examiner cargs_find_arg_type_examiner(int type_code)
+{
+    struct __cargs_arg_type *type = __find(type_code);
+    if (type == NULL) {
+        return __default_examiner;
+    }
+
+    return type->examiner;
+}
+
+void __default_transfer(char * const buf,
+                        const char * const arg)
+{
+    (void) buf;
+    (void) arg;
+}
+
+/**
+ * find arg type transfer
+ * @param type_code: type code
+ * @return transfer
+ * 
+ */
+arg_type_transfer cargs_find_arg_type_transfer(int type_code)
+{
+    struct __cargs_arg_type *type = __find(type_code);
+    if (type == NULL) {
+        return __default_transfer;
+    }
+
+    return type->transfer;
+}
+
+/**
+ * find arg type
+ * @param type_code: type code
+ * @return type
+ * 
+ */
+struct __cargs_arg_type *cargs_find_arg_type(int type_code)
+{
+    return __find(type_code);
 }
