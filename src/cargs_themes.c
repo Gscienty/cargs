@@ -156,12 +156,15 @@ const void *cargs_find_process(const char * const fname)
 static bool __satisfy(struct __cargs_theme * const p)
 {
     int i;
+    if (p == NULL) {
+        return false;
+    }
     if (!p->args[0].arg) {
         return false;
     }
     
     for (i = 0;
-         !p->args[i].arg && i < CARGS_THEME_ARGS_MAX;
+         p->args[i].arg && i < CARGS_THEME_ARGS_MAX;
          i++) {
         if (p->args[i].required && !p->args[i].arg->enable) {
             return false;
