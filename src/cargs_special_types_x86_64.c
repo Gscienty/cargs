@@ -40,7 +40,7 @@ static void __byte_transfer(char * const buf, const char * const arg)
     buf[0] = atoi(arg);
 }
 
-cargs_arg_type(arg_type_byte, 1,
+cargs_arg_type(arg_type_byte, 8,
                __byte_examiner, __byte_transfer);
 
 static bool __short_examiner(const char * const arg)
@@ -66,7 +66,7 @@ static void __short_transfer(char * const buf, const char * const arg)
     }
 }
 
-cargs_arg_type(arg_type_short, 2,
+cargs_arg_type(arg_type_short, 8,
                __short_examiner, __short_transfer);
 
 static bool __int_examiner(const char * const arg)
@@ -92,7 +92,7 @@ static void __int_transfer(char * const buf, const char * const arg)
     }
 }
 
-cargs_arg_type(arg_type_int, 4,
+cargs_arg_type(arg_type_int, 8,
                __int_examiner, __int_transfer);
 
 static bool __string_examiner(const char * const arg)
@@ -110,5 +110,5 @@ static void __string_transfer(char * const buf, const char * const arg)
     }
 }
 
-cargs_arg_type(arg_type_string, sizeof(char *),
+cargs_arg_type(arg_type_string, 8,
                __string_examiner, __string_transfer);
