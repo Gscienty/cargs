@@ -286,3 +286,26 @@ size_t cargs_arg_size(const struct __cargs_arg * const arg)
     return ret;
 }
 
+/**
+ * get args count
+ * @param arg
+ * @return arg size
+ * 
+ */
+int cargs_arg_count(const struct __cargs_arg * const arg)
+{
+    int i;
+
+    for (i = 0;
+         arg->args_type[i] != arg_type_null
+         && i < CARGS_ARG_TYPE_MAX;
+         i++) {
+        
+        struct __cargs_arg_type *type = cargs_find_arg_type(arg->args_type[i]);
+        if (type == NULL) {
+            return 0;
+        }
+    }
+
+    return i;
+}

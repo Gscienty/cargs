@@ -140,8 +140,17 @@ bool cargs_transfer(int argc, char **argv);
 /**
  * get args size
  * @param arg
+ * @return args size
  * 
  */
 size_t cargs_arg_size(const struct __cargs_arg * const arg);
+
+/**
+ * get args count
+ * @param arg
+ * @return arg size
+ * 
+ */
+int cargs_arg_count(const struct __cargs_arg * const arg);
 
 #endif
