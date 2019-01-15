@@ -36,87 +36,81 @@ void cargs_call_x86_64(const struct __cargs_theme * const process)
            args_off += arg_type->value_size;
         }
     }
-
+    
     switch (args_count) {
     case 0:
-        __asm__ __volatile__ ("call *%0;"
-                              :
-                              :"m" (process->fptr));
         break;
     case 1:
-        __asm__ __volatile__ ("push %%rbp;"
-                              "mov %1, %%rbp;"
-                              "mov (%%rbp), " CARGS_X86_64_ASM_PARAM_1 ";"
-                              "call *%0;"
-                              "pop %%rbp;"
+        __asm__ __volatile__ (
+                              "mov %0, %%eax;"
+                              "mov (%%eax), " CARGS_X86_64_ASM_PARAM_1 ";"
                               :
-                              : "m" (process->fptr),
-                                "m" (args_buffer));
+                              : "m" (args_buffer));
         break;
     case 2:
-        __asm__ __volatile__ ("push %%rbp;"
-                              "mov %1, %%rbp;"
-                              "mov (%%rbp), " CARGS_X86_64_ASM_PARAM_1 ";"
-                              "mov 0x8(%%rbp), " CARGS_X86_64_ASM_PARAM_2 ";"
-                              "call *%0;"
-                              "pop %%rbp;"
+        __asm__ __volatile__ (
+                              "mov %0, %%eax;"
+                              "mov (%%eax), " CARGS_X86_64_ASM_PARAM_1 ";"
+                              "add $0x8, %%eax;"
+                              "mov (%%eax), " CARGS_X86_64_ASM_PARAM_2 ";"
                               :
-                              : "m" (process->fptr),
-                                "m" (args_buffer));
+                              : "m" (args_buffer));
         break;
     case 3:
-        __asm__ __volatile__ ("push %%rbp;"
-                              "mov %1, %%rbp;"
-                              "mov (%%rbp), " CARGS_X86_64_ASM_PARAM_1 ";"
-                              "mov 0x8(%%rbp), " CARGS_X86_64_ASM_PARAM_2 ";"
-                              "mov 0x10(%%rbp), " CARGS_X86_64_ASM_PARAM_3 ";"
-                              "call *%0;"
-                              "pop %%rbp;"
+        __asm__ __volatile__ (
+                              "mov %0, %%eax;"
+                              "mov (%%eax), " CARGS_X86_64_ASM_PARAM_1 ";"
+                              "add $0x8, %%eax;"
+                              "mov (%%eax), " CARGS_X86_64_ASM_PARAM_2 ";"
+                              "add $0x8, %%eax;"
+                              "mov (%%eax), " CARGS_X86_64_ASM_PARAM_3 ";"
                               :
-                              : "m" (process->fptr),
-                                "m" (args_buffer));
+                              : "m" (args_buffer));
         break;
     case 4:
-        __asm__ __volatile__ ("push %%rbp;"
-                              "mov %1, %%rbp;"
-                              "mov (%%rbp), " CARGS_X86_64_ASM_PARAM_1 ";"
-                              "mov 0x8(%%rbp), " CARGS_X86_64_ASM_PARAM_2 ";"
-                              "mov 0x10(%%rbp), " CARGS_X86_64_ASM_PARAM_3 ";"
-                              "mov 0x18(%%rbp), " CARGS_X86_64_ASM_PARAM_4 ";"
-                              "call *%0;"
-                              "pop %%rbp;"
+        __asm__ __volatile__ (
+                              "mov %0, %%eax;"
+                              "mov (%%eax), " CARGS_X86_64_ASM_PARAM_1 ";"
+                              "add $0x8, %%eax;"
+                              "mov (%%eax), " CARGS_X86_64_ASM_PARAM_2 ";"
+                              "add $0x8, %%eax;"
+                              "mov (%%eax), " CARGS_X86_64_ASM_PARAM_3 ";"
+                              "add $0x8, %%eax;"
+                              "mov (%%eax), " CARGS_X86_64_ASM_PARAM_4 ";"
                               :
-                              : "m" (process->fptr),
-                                "m" (args_buffer));
+                              : "m" (args_buffer));
         break;
     case 5:
-        __asm__ __volatile__ ("push %%rbp;"
-                              "mov %1, %%rbp;"
-                              "mov (%%rbp), " CARGS_X86_64_ASM_PARAM_1 ";"
-                              "mov 0x8(%%rbp), " CARGS_X86_64_ASM_PARAM_2 ";"
-                              "mov 0x10(%%rbp), " CARGS_X86_64_ASM_PARAM_3 ";"
-                              "mov 0x18(%%rbp), " CARGS_X86_64_ASM_PARAM_4 ";"
-                              "mov 0x20(%%rbp), " CARGS_X86_64_ASM_PARAM_5 ";"
-                              "call *%0;"
-                              "pop %%rbp;"
+        __asm__ __volatile__ (
+                              "mov %0, %%eax;"
+                              "mov (%%eax), " CARGS_X86_64_ASM_PARAM_1 ";"
+                              "add $0x8, %%eax;"
+                              "mov (%%eax), " CARGS_X86_64_ASM_PARAM_2 ";"
+                              "add $0x8, %%eax;"
+                              "mov (%%eax), " CARGS_X86_64_ASM_PARAM_3 ";"
+                              "add $0x8, %%eax;"
+                              "mov (%%eax), " CARGS_X86_64_ASM_PARAM_4 ";"
+                              "add $0x8, %%eax;"
+                              "mov (%%eax), " CARGS_X86_64_ASM_PARAM_5 ";"
                               :
-                              : "m" (process->fptr),
-                                "m" (args_buffer));
+                              : "m" (args_buffer));
         break;
     case 6:
-        __asm__ __volatile__ ("push %%rbp;"
-                              "mov %1, %%rbp;"
-                              "mov (%%rbp), " CARGS_X86_64_ASM_PARAM_1 ";"
-                              "mov 0x8(%%rbp), " CARGS_X86_64_ASM_PARAM_2 ";"
-                              "mov 0x10(%%rbp), " CARGS_X86_64_ASM_PARAM_3 ";"
-                              "mov 0x18(%%rbp), " CARGS_X86_64_ASM_PARAM_4 ";"
-                              "mov 0x20(%%rbp), " CARGS_X86_64_ASM_PARAM_5 ";"
-                              "mov 0x28(%%rbp), " CARGS_X86_64_ASM_PARAM_6 ";"
-                              "call *%0;"
-                              "pop %%rbp;"
+        __asm__ __volatile__ (
+                              "mov %0, %%eax;"
+                              "mov (%%eax), " CARGS_X86_64_ASM_PARAM_1 ";"
+                              "add $0x8, %%eax;"
+                              "mov (%%eax), " CARGS_X86_64_ASM_PARAM_2 ";"
+                              "add $0x8, %%eax;"
+                              "mov (%%eax), " CARGS_X86_64_ASM_PARAM_3 ";"
+                              "add $0x8, %%eax;"
+                              "mov (%%eax), " CARGS_X86_64_ASM_PARAM_4 ";"
+                              "add $0x8, %%eax;"
+                              "mov (%%eax), " CARGS_X86_64_ASM_PARAM_5 ";"
+                              "add $0x8, %%eax;"
+                              "mov (%%eax), " CARGS_X86_64_ASM_PARAM_6 ";"
                               :
-                              : "m" (process->fptr),
-                                "m" (args_buffer));
+                              : "m" (args_buffer));
         break;
     default:
         remain_args = (args_count - 6) * 8;
@@ -149,46 +143,12 @@ void cargs_call_x86_64(const struct __cargs_theme * const process)
                               :
                               : "m" (args_buffer),
                                 "m" (remain_args));
-        __asm__ __volatile__ (
-                              "call *%0"
-                              :
-                              : "m" (process->fptr));
-        /*__asm__ __volatile__ (*/
-                              /*"mov %1, %%eax;"*/
-                              /*"mov %2, %%ebx;"*/
-
-                              /*"mov (%%eax), " CARGS_X86_64_ASM_PARAM_1 ";"*/
-                              /*"mov 0x8(%%eax), " CARGS_X86_64_ASM_PARAM_2 ";"*/
-                              /*"mov 0x10(%%eax), " CARGS_X86_64_ASM_PARAM_3 ";"*/
-                              /*"mov 0x18(%%eax), " CARGS_X86_64_ASM_PARAM_4 ";"*/
-                              /*"mov 0x20(%%eax), " CARGS_X86_64_ASM_PARAM_5 ";"*/
-                              /*"mov 0x28(%%eax), " CARGS_X86_64_ASM_PARAM_6 ";"*/
-                              /*"add $0x28, %%eax;"*/
-                              /*"add %%eax, %%ebx;"*/
-
-                              /*"__prepare:;"*/
-                              /*"add $0x8, %%eax;"*/
-                              /*"push (%%eax);"*/
-
-                              /*"cmp %%ebx, %%eax;"*/
-                              /*"jnz __prepare;"*/
-
-
-                              /*"_call:;"*/
-                              /*"call *%0;"*/
-
-                              /*"mov %1, %%eax;"*/
-                              /*"__release:;"*/
-                              /*"add $0x8, %%eax;"*/
-                              /*"pop %%rbp;"*/
-                              /*"cmp %%ebx, %%eax;"*/
-                              /*"jnz __release;"*/
-                              /*:*/
-                              /*: "m" (process->fptr), // %0*/
-                                /*"m" (args_buffer),   // %1*/
-                                /*"m" (remain_args));  // %2*/
         break;
     }
+    __asm__ __volatile__ (
+                          "call *%0"
+                          :
+                          : "m" (process->fptr));
 
     free(args_buffer);
 }
