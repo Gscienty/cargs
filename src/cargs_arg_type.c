@@ -1,6 +1,8 @@
 #include "cargs_arg_type.h"
 #include <stdlib.h>
 
+#include "cargs_special_types_x86_64.c"
+
 __$inner_arg_type_flag($__arg_type_flag$);
 static struct __cargs_arg_type *__args_type_start = NULL;
 static struct __cargs_arg_type *__args_type_end   = NULL;
@@ -54,10 +56,12 @@ static void __init_arg_type_code()
         exit(-1);
     }
 
+
     for (p = __args_type_start; p != __args_type_end; p++) {
         if (p == &CARGS_ARG_TYPE_NAME($__arg_type_flag$)) {
             continue;
         }
+
 
         if (!__insert_type_rbt(p)) {
             exit(-1);

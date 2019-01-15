@@ -24,7 +24,7 @@ static bool __is_number(const char * const arg)
     return true;
 }
 
-static bool __byte_examiner(const char * const arg)
+static bool __attribute__((used)) __byte_examiner(const char * const arg)
 {
     char val;
     if (!__is_number(arg)) {
@@ -35,7 +35,7 @@ static bool __byte_examiner(const char * const arg)
     return -0x80 <= val && val <= 0x7F;
 }
 
-static void __byte_transfer(char * const buf, const char * const arg)
+static void __attribute__((used)) __byte_transfer(char * const buf, const char * const arg)
 {
     buf[0] = atoi(arg);
 }
@@ -43,7 +43,7 @@ static void __byte_transfer(char * const buf, const char * const arg)
 cargs_arg_type(arg_type_byte, 8,
                __byte_examiner, __byte_transfer);
 
-static bool __short_examiner(const char * const arg)
+static bool __attribute__((used)) __short_examiner(const char * const arg)
 {
     short val;
 
@@ -55,7 +55,7 @@ static bool __short_examiner(const char * const arg)
     return -0x8000 <= val && val <= 0x7FFF;
 }
 
-static void __short_transfer(char * const buf, const char * const arg)
+static void  __attribute__((used)) __short_transfer(char * const buf, const char * const arg)
 {
     int val;
     int i;
@@ -69,7 +69,7 @@ static void __short_transfer(char * const buf, const char * const arg)
 cargs_arg_type(arg_type_short, 8,
                __short_examiner, __short_transfer);
 
-static bool __int_examiner(const char * const arg)
+static bool  __attribute__((used)) __int_examiner(const char * const arg)
 {
     int val;
 
@@ -81,7 +81,7 @@ static bool __int_examiner(const char * const arg)
     return -0x80000000L <= val && val <= 0x7FFFFFFF;
 }
 
-static void __int_transfer(char * const buf, const char * const arg)
+static void  __attribute__((used)) __int_transfer(char * const buf, const char * const arg)
 {
     int val;
     int i;
@@ -95,13 +95,13 @@ static void __int_transfer(char * const buf, const char * const arg)
 cargs_arg_type(arg_type_int, 8,
                __int_examiner, __int_transfer);
 
-static bool __string_examiner(const char * const arg)
+static bool  __attribute__((used)) __string_examiner(const char * const arg)
 {
     (void) arg;
     return true;
 }
 
-static void __string_transfer(char * const buf, const char * const arg)
+static void  __attribute__((used)) __string_transfer(char * const buf, const char * const arg)
 {
     size_t i;
 
