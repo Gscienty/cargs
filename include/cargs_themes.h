@@ -64,4 +64,11 @@ const struct __cargs_theme *cargs_satisfy_process();
  */
 size_t cargs_process_args_size(const struct __cargs_theme * const process);
 
+/**
+ * process args count
+ * @return args count
+ *
+ */
+int cargs_process_args_count(const struct __cargs_theme * const process);
+
 #endif

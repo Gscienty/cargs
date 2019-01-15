@@ -210,3 +210,24 @@ size_t cargs_process_args_size(const struct __cargs_theme * const process)
 
     return ret;
 }
+
+/**
+ * process args count
+ * @return args count
+ *
+ */
+int cargs_process_args_count(const struct __cargs_theme * const process)
+{
+    int i;
+    int ret = 0;
+
+    for (i = 0;
+         i < CARGS_THEME_ARGS_MAX
+         && process->args[i].arg;
+         i++) {
+        ret += cargs_arg_count(process->args[i].arg);
+    }
+
+
+    return ret;
+}
