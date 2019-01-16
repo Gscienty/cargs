@@ -10,7 +10,6 @@ MODULES = cargs_arg                  \
 		  cargs_call_x86_64          \
 		  cargs_linked_list          \
 		  cargs_rbtree               \
-		  cargs_special_types_x86_64 \
 		  cargs_themes
 
 LIBNAME = libcargs.so
@@ -37,12 +36,10 @@ cargs_linked_list:
 cargs_rbtree:
 	$(BUILDOBJ)
 
-cargs_special_types_x86_64:
-	$(BUILDOBJ)
-
 cargs_themes:
 	$(BUILDOBJ)
 
 clean:
 	rm $(addsuffix .o, $(MODULES))
 	rm $(LIBNAME)
+	rm $(ARNAME)
