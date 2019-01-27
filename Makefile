@@ -1,6 +1,6 @@
 CC = gcc
 PWD = $(shell pwd)
-BFLAG = -g -fPIC
+BFLAG = -g
 INC = $(PWD)/include
 SRC = $(PWD)/src/
 BUILDOBJ = $(CC) $(BFLAG) -c -I $(INC) -o $@.o $(SRC)$@.c
