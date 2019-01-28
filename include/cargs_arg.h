@@ -30,69 +30,69 @@ struct __cargs_arg {
 #define CARGS_ARG_STRUCT_NAME(n) __cargs_arg_name_##n
 #define CARGS_ARG_MAGIC 0xca294a29
 
-#define __$inner_arg_flag(n) \
+#define __$inner_arg_flag(n)                           \
     static struct __cargs_arg CARGS_ARG_STRUCT_NAME(n) \
-        CARGS_ARG_SECTION = { \
-            ._inner_name        = #n, \
-            .prerequisite       = NULL, \
-            .titles             = { NULL }, \
-            .enable             = false, \
-            .args_type          = { arg_type_null }, \
-            .params             = { NULL }, \
-            .params_count_cache = -1, \
-            .magic              = CARGS_ARG_MAGIC \
+        CARGS_ARG_SECTION = {                          \
+            ._inner_name        = #n,                  \
+            .prerequisite       = NULL,                \
+            .titles             = { NULL },            \
+            .enable             = false,               \
+            .args_type          = { arg_type_null },   \
+            .params             = { NULL },            \
+            .params_count_cache = -1,                  \
+            .magic              = CARGS_ARG_MAGIC      \
         }
 
-#define cargs_flag(n, ts) \
+#define cargs_flag(n, ts)                              \
     static struct __cargs_arg CARGS_ARG_STRUCT_NAME(n) \
-        CARGS_ARG_SECTION = { \
-            ._inner_name        = #n, \
-            .prerequisite       = NULL, \
-            .titles             = ts, \
-            .enable             = false, \
-            .args_type          = { arg_type_null }, \
-            .params             = { NULL }, \
-            .params_count_cache = -1, \
-            .magic              = CARGS_ARG_MAGIC \
+        CARGS_ARG_SECTION = {                          \
+            ._inner_name        = #n,                  \
+            .prerequisite       = NULL,                \
+            .titles             = ts,                  \
+            .enable             = false,               \
+            .args_type          = { arg_type_null },   \
+            .params             = { NULL },            \
+            .params_count_cache = -1,                  \
+            .magic              = CARGS_ARG_MAGIC      \
         }
 
-#define cargs_subflag(p, n, ts) \
-    static struct __cargs_arg CARGS_ARG_STRUCT_NAME(n) \
-        CARGS_ARG_SECTION = { \
-            ._inner_name        = #n, \
+#define cargs_subflag(p, n, ts)                              \
+    static struct __cargs_arg CARGS_ARG_STRUCT_NAME(n)       \
+        CARGS_ARG_SECTION = {                                \
+            ._inner_name        = #n,                        \
             .prerequisite       = &CARGS_ARG_STRUCT_NAME(p), \
-            .titles             = ts, \
-            .enable             = false, \
-            .args_type          = { }, \
-            .params             = { }, \
-            .params_count_cache = -1, \
-            .magic              = CARGS_ARG_MAGIC \
+            .titles             = ts,                        \
+            .enable             = false,                     \
+            .args_type          = { arg_type_null },         \
+            .params             = { NULL },                  \
+            .params_count_cache = -1,                        \
+            .magic              = CARGS_ARG_MAGIC            \
         }
 
-#define cargs_arg(n, ts, pts) \
+#define cargs_arg(n, ts, pts)                          \
     static struct __cargs_arg CARGS_ARG_STRUCT_NAME(n) \
-        CARGS_ARG_SECTION = { \
-            ._inner_name        = #n, \
-            .prerequisite       = NULL, \
-            .titles             = ts, \
-            .enable             = false, \
-            .args_type          = pts, \
-            .params             = { }, \
-            .params_count_cache = -1, \
-            .magic              = CARGS_ARG_MAGIC \
+        CARGS_ARG_SECTION = {                          \
+            ._inner_name        = #n,                  \
+            .prerequisite       = NULL,                \
+            .titles             = ts,                  \
+            .enable             = false,               \
+            .args_type          = pts,                 \
+            .params             = { NULL },            \
+            .params_count_cache = -1,                  \
+            .magic              = CARGS_ARG_MAGIC      \
         }
 
-#define cargs_subarg(p, n, ts, pts) \
-    static struct __cargs_arg CARGS_ARG_STRUCT_NAME(n) \
-        CARGS_ARG_SECTION = { \
-            ._inner_name        = #n, \
+#define cargs_subarg(p, n, ts, pts)                          \
+    static struct __cargs_arg CARGS_ARG_STRUCT_NAME(n)       \
+        CARGS_ARG_SECTION = {                                \
+            ._inner_name        = #n,                        \
             .prerequisite       = &CARGS_ARG_STRUCT_NAME(p), \
-            .titles             = ts, \
-            .enable             = false, \
-            .args_type          = pts, \
-            .params             = { }, \
-            .params_count_cache = -1, \
-            .magic              = CARGS_ARG_MAGIC \
+            .titles             = ts,                        \
+            .enable             = false,                     \
+            .args_type          = pts,                       \
+            .params             = { NULL },                  \
+            .params_count_cache = -1,                        \
+            .magic              = CARGS_ARG_MAGIC            \
         }
 
 struct __cargs_arg_rbnode {
@@ -111,8 +111,8 @@ struct __cargs_theme_arg {
     const struct __cargs_arg * const arg;
 };
 
-#define cargs_theme_arg(_arg, _required) { \
-        .required = _required, \
+#define cargs_theme_arg(_arg, _required) {  \
+        .required = _required,              \
         .arg = &CARGS_ARG_STRUCT_NAME(_arg) \
     }
 

@@ -32,24 +32,24 @@ struct __cargs_arg_type {
 #define CARGS_ARG_TYPE_FUNCTION_NAME(n) __cargs_arg_type_function_name_##n
 #define CARGS_ARG_TYPE_MAGIC 0xa29758ee
 
-#define __$inner_arg_type_flag(n) \
+#define __$inner_arg_type_flag(n)                         \
     static struct __cargs_arg_type CARGS_ARG_TYPE_NAME(n) \
-        CARGS_ARG_TYPE_SECTION = { \
-            .type_code  = 0, \
-            .value_size = 0, \
-            .examiner   = NULL, \
-            .transfer   = NULL, \
-            .magic      = CARGS_ARG_TYPE_MAGIC \
+        CARGS_ARG_TYPE_SECTION = {                        \
+            .type_code  = 0,                              \
+            .value_size = 0,                              \
+            .examiner   = NULL,                           \
+            .transfer   = NULL,                           \
+            .magic      = CARGS_ARG_TYPE_MAGIC            \
         }
 
-#define cargs_arg_type(c, s, e, t) \
+#define cargs_arg_type(c, s, e, t)                        \
     static struct __cargs_arg_type CARGS_ARG_TYPE_NAME(c) \
-        CARGS_ARG_TYPE_SECTION = { \
-            .type_code  = c, \
-            .value_size = s, \
-            .examiner   = e, \
-            .transfer   = t, \
-            .magic      = CARGS_ARG_TYPE_MAGIC \
+        CARGS_ARG_TYPE_SECTION = {                        \
+            .type_code  = c,                              \
+            .value_size = s,                              \
+            .examiner   = e,                              \
+            .transfer   = t,                              \
+            .magic      = CARGS_ARG_TYPE_MAGIC            \
         };
 
 

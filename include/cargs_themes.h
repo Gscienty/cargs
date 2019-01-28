@@ -20,15 +20,15 @@ struct __cargs_theme {
     unsigned int magic;
 };
 
-#define cargs_process(fname, _args, ...) \
-    void CARGS_THEME_FUNCTION_NAME(fname)(__VA_ARGS__); \
+#define cargs_process(fname, _args, ...)                       \
+    void CARGS_THEME_FUNCTION_NAME(fname)(__VA_ARGS__);        \
     static struct __cargs_theme CARGS_THEME_STRUCT_NAME(fname) \
-    CARGS_THEME_SECTION = { \
-        .name  = #fname, \
-        .args  = _args, \
-        .fptr  = (void *) CARGS_THEME_FUNCTION_NAME(fname), \
-        .magic = CARGS_THEME_MAGIC \
-    }; \
+    CARGS_THEME_SECTION = {                                    \
+        .name  = #fname,                                       \
+        .args  = _args,                                        \
+        .fptr  = (void *) CARGS_THEME_FUNCTION_NAME(fname),    \
+        .magic = CARGS_THEME_MAGIC                             \
+    };                                                         \
     void CARGS_THEME_FUNCTION_NAME(fname)(__VA_ARGS__)
 
 struct __cargs_theme_rbnode {
