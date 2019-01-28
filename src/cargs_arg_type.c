@@ -1,8 +1,6 @@
 #include "cargs_arg_type.h"
 #include <stdlib.h>
 
-#include "cargs_special_types_x86_64.c"
-
 __$inner_arg_type_flag($__arg_type_flag$);
 static struct __cargs_arg_type *__args_type_start = NULL;
 static struct __cargs_arg_type *__args_type_end   = NULL;
@@ -96,12 +94,18 @@ static void __init_type_end()
     __args_type_end++;
 }
 
+#ifdef X86_64
+#include "x86_64.c"
+#endif
+
 /**
  * init
  * 
  */
 void cargs_arg_type_init()
 {
+    cargs_arg_basetype_init();
+
     __init_type_start();
     __init_type_end();
 

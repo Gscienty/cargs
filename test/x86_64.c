@@ -1,7 +1,4 @@
-#include "cargs_arg.h"
-#include "cargs_themes.h"
-#include "cargs_call_x86_64.h"
-#include "cargs_type/x86_64.h"
+#include "cargs.h"
 #include <stdio.h>
 #include <malloc.h>
 
@@ -28,21 +25,6 @@ cargs_process(one_arg,
 
 int main(int argc, char **argv)
 {
-    const struct __cargs_theme *process;
+    cargs_run(argc, argv, NULL);
 
-    printf("%d\n", argc);
-
-    cargs_args_init();
-    cargs_arg_type_init();
-    cargs_processes_init();
-
-    cargs_transfer(argc, argv);
-    process = cargs_satisfy_process();
-    
-    if (process == NULL) {
-        printf("WHAT\n");
-        return 0;
-    }
-
-    cargs_call_x86_64(process);
 }

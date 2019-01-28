@@ -1,13 +1,17 @@
-#include "cargs_call_x86_64.h"
+#include "cargs_themes.h"
 #include <malloc.h>
 #include <stdlib.h>
 
-/**
- * arch x86_64 call
- * @param process: process
- * 
- */
-void cargs_call_x86_64(const struct __cargs_theme * const process)
+#define CARGS_X86_64_ASM_PARAM_1 "%%rdi"
+#define CARGS_X86_64_ASM_PARAM_2 "%%rsi"
+#define CARGS_X86_64_ASM_PARAM_3 "%%rdx"
+#define CARGS_X86_64_ASM_PARAM_4 "%%rcx"
+#define CARGS_X86_64_ASM_PARAM_5 "%%r8"
+#define CARGS_X86_64_ASM_PARAM_6 "%%r9"
+
+#define CARGS_X86_64_ASM_REG_MAX 6
+
+static void __call_x86_64(const struct __cargs_theme * const process)
 {
     struct __cargs_arg_type *arg_type;
     char *arg;

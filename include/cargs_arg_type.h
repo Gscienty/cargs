@@ -65,6 +65,12 @@ struct __cargs_arg_type_rbt {
 void cargs_arg_type_init();
 
 /**
+ * init base type
+ * 
+ */
+void cargs_arg_basetype_init();
+
+/**
  * find arg type
  * @param type_code: type code
  * @return type
