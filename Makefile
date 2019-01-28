@@ -12,11 +12,9 @@ MODULES = cargs_arg         \
 		  cargs_rbtree      \
 		  cargs_themes
 
-LIBNAME = libcargs.so
 ARNAME = libcargs.a
 
 all: objs
-	#$(CC) -shared $(BFLAG) -pipe $(addsuffix .o, $(MODULES)) -o $(LIBNAME)
 	ar -rc $(ARNAME) $(addsuffix .o, $(MODULES))
 
 objs: $(MODULES)
@@ -41,5 +39,4 @@ cargs_themes:
 
 clean:
 	rm $(addsuffix .o, $(MODULES))
-	rm $(LIBNAME)
 	rm $(ARNAME)
