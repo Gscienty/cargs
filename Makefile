@@ -10,7 +10,8 @@ MODULES = cargs_arg         \
 		  cargs_call        \
 		  cargs_linked_list \
 		  cargs_rbtree      \
-		  cargs_themes
+		  cargs_themes		\
+		  cargs
 
 ARNAME = libcargs.a
 
@@ -35,6 +36,9 @@ cargs_rbtree:
 	$(BUILDOBJ)
 
 cargs_themes:
+	$(BUILDOBJ)
+
+cargs:
 	$(BUILDOBJ)
 
 clean:
